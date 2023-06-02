@@ -1,0 +1,68 @@
+# Shortcut for the WP CLI command
+WPCLI="%%SYSTEM_COMMAND_WPCLI%%"
+
+#
+# Search and replace database for the domain url
+#
+echo "Searching Db for [%%DB_FIND%%] and replace with [%%DB_REPLACE%%]"
+$WPCLI search-replace '%%DB_FIND%%' '%%DB_REPLACE%%' --precise --recurse-objects --all-tables
+
+# Setup error handling if we are in bash
+if [ ! -z "$BASH" ]
+then
+	echo "Setting up bash error handling"
+	# Stop on error
+	set -e
+	# Stop on unitialized variables
+	set -u
+	# Stop on failed pipes
+	set -o pipefail
+else
+	echo "Not in bash!  Error handling is disabled."
+fi
+
+#
+# Update content WordPress
+#
+
+#
+# Update Wordpress Database
+#
+echo "Updating WordPress"
+$WPCLI core update-db
+
+#
+# Symlink the custom theme
+#
+# TODO: This should configurable and synchronized with wp-config.php
+echo "Creating symbolic link for custom theme in WordPress themes"
+cd ./webroot/wp-content/themes
+if [ ! -e custom ]
+then
+	ln -s ../../custom-themes/custom
+fi
+cd -
+
+# Install all plugins that are found in the Child theme directory.
+# Usually, these plugins are the proprietary plugins. (WPML, etc.).
+# Please note the --force option which overwrites any installed version.
+echo "Installing plugins from child theme folder"
+if [ -d "%%WP_CHILD_PLUGIN_FOLDER%%" ];
+then
+	for plugin in  %%WP_CHILD_PLUGIN_FOLDER%%/*.zip
+	do
+		echo "Installing $plugin"
+		$WPCLI plugin install --force $plugin
+	done
+fi
+
+#
+# Clean cache
+#
+echo "Cleaning up transients"
+$WPCLI transient delete --all
+
+echo "Flushing cache"
+$WPCLI cache flush
+
+# vi:ft=sh

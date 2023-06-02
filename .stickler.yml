@@ -1,0 +1,5 @@
+linters:
+  phpcs:
+    standard: WordPress-Core
+    extensions: '.php'
+    exclude: 'Generic.Commenting.Todo'

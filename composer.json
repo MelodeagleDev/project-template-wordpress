@@ -1,0 +1,132 @@
+{
+    "name": "qobo/project-template-wordpress",
+    "description": "Template for new WordPress projects",
+    "keywords": ["wordpress", "project", "template", "setup", "rapid-development", "dry"],
+    "type": "project",
+    "license": "MIT",
+    "homepage": "https://www.qobo.biz",
+    "authors": [
+        {
+            "name": "Qobo Ltd",
+            "email": "support@qobo.biz",
+            "homepage": "https://www.qobo.biz",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/QoboLtd/project-template-wordpress/issues",
+        "source": "https://github.com/QoboLtd/project-template-wordpress"
+    },
+    "config": {
+        "secure-http": false,
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "7.1"
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://wpackagist.org"
+        }
+    ],
+    "require": {
+        "aws/aws-sdk-php": "^3.52",
+        "brainmaestro/composer-git-hooks": "^2.4",
+        "fancyguy/webroot-installer": "1.1.0",
+        "johnpbloch/wordpress-core": "5.8.0",
+        "johnpbloch/wordpress-core-installer": "2.0.0",
+        "josegonzalez/dotenv": "^3.2",
+        "pyrech/composer-changelogs": "^1.4",
+        "qobo/qobo-robo": "^2.0",
+        "qobo/qobo-wp-brand": "2.0.2",
+        "qobo/qobo-wp-generic-theme": "1.1.3",
+        "qobo/qobo-wp-shortcodes": "1.0.1",
+        "wp-cli/wp-cli-bundle": "^2.4",
+        "wpackagist-plugin/akismet": "4.1.10",
+        "wpackagist-plugin/amp": "2.0.11",
+        "wpackagist-plugin/bad-behavior": "2.2.24",
+        "wpackagist-plugin/bootstrap-for-contact-form-7": "1.4.8",
+        "wpackagist-plugin/classic-editor": "1.6",
+        "wpackagist-plugin/contact-form-7": "5.4.1",
+        "wpackagist-plugin/contact-form-7-honeypot": "2.1",
+        "wpackagist-plugin/custom-upload-dir": "3.4.6",
+        "wpackagist-plugin/disable-comments": "2.1.2",
+        "wpackagist-plugin/disable-wordpress-updates": "1.6.7",
+        "wpackagist-plugin/fast-velocity-minify": "3.2.2",
+        "wpackagist-plugin/gdpr-cookie-compliance": "4.5.6",
+        "wpackagist-plugin/google-analytics-for-wordpress": "7.17.0",
+        "wpackagist-plugin/google-sitemap-generator": "4.1.1",
+        "wpackagist-plugin/jetpack": "9.9.1",
+        "wpackagist-plugin/listo": "1.3",
+        "wpackagist-plugin/multiple-post-thumbnails": "1.7",
+        "wpackagist-plugin/page-links-to": "3.3.5",
+        "wpackagist-plugin/pubsubhubbub": "3.0.3",
+        "wpackagist-plugin/resize-image-after-upload": "1.8.6",
+        "wpackagist-plugin/restricted-site-access": "^7.0.1",
+        "wpackagist-plugin/shortcodes-ultimate": "5.10.1",
+        "wpackagist-plugin/tiny-compress-images": "3.2.1",
+        "wpackagist-plugin/wordpress-seo": "16.8",
+        "wpackagist-plugin/wp-mail-smtp": "2.8.0",
+        "wpackagist-plugin/wp-media-library-categories": "1.9.9",
+        "wpackagist-plugin/wp-super-cache": "1.7.3",
+        "wpackagist-plugin/wp-theme-plugin-editor-disable": "1.0.0",
+        "wpackagist-plugin/yoast-test-helper": "1.14"
+    },
+    "require-dev": {
+        "brianium/paratest": "*",
+        "phpstan/phpstan": "^0.10.3",
+        "phpstan/phpstan-phpunit": "^0.10.0",
+        "phpunit/phpunit": "*",
+        "squizlabs/php_codesniffer": "*",
+        "thecodingmachine/phpstan-strict-rules": "^0.11.0",
+        "wpackagist-plugin/theme-check": "*",
+        "wpackagist-plugin/debug-bar": "1.1.2",
+        "wpackagist-plugin/debug-bar-console": "0.3",
+        "wpackagist-plugin/p3-profiler": "1.5.4",
+        "wpackagist-plugin/user-switching": "1.5.7",
+        "wp-coding-standards/wpcs": "0.11.0"
+    },
+    "suggest": {
+        "qobo/qobo-wp-custom-admin-theme": "it fixes WP admin styles where widget input, select overlap their container",
+        "wpackagist-plugin/regenerate-thumbnails": "Regenerate Thumbnails allows you to regenerate the thumbnails for your image attachments.",
+        "ext-xdebug": "Allows code coverage reports and advanced debugging"
+    },
+    "autoload": {
+        "psr-4": {
+            "Qobo\\Robo\\": "build/Robo/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Test\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": [
+            "phpcs",
+            "phpunit --no-coverage"
+        ],
+        "test-coverage": [
+            "phpcs",
+            "phpunit"
+        ],
+        "post-install-cmd": "cghooks add",
+        "post-update-cmd": "cghooks update"
+    },
+    "scripts-descriptions": {
+        "test": "Runs phpcs and phpunit without coverage",
+        "test-coverage": "Runs phpcs and phpunit with coverage enabled"
+    },
+    "extra": {
+        "hooks": {
+            "pre-commit": "PHPCS_FILES=$(git diff-index --name-only --cached --diff-filter=ACMR HEAD 'tests/**.php' 'src/**.php' 'webroot/**.php'); if [ \"$PHPCS_FILES\" ]; then ./vendor/bin/phpcs $PHPCS_FILES; fi"
+        },
+        "wordpress-install-dir": "webroot/wp",
+        "installer-paths": {
+            "webroot/wp-content/plugins/{$name}": ["type:wordpress-plugin"],
+            "webroot/wp-content/themes/{$name}": ["type:wordpress-theme"]
+        }
+    }
+}
